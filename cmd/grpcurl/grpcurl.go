@@ -67,6 +67,8 @@ var (
 	key = flags.String("key", "", prettify(`
 		File containing client private key, to present to the server. Not valid
 		with -plaintext option. Must also provide -cert option.`))
+	importUrl = flags.String("import-url", "", prettify(`
+		The URL where the protobufs will be fetched from.`))
 	protoset      multiString
 	protoFiles    multiString
 	importPaths   multiString
@@ -371,6 +373,9 @@ func main() {
 	if len(importPaths) > 0 && len(protoFiles) == 0 {
 		warn("The -import-path argument is not used unless -proto files are used.")
 	}
+	if len(importPaths) > 0 && len(*importUrl) > 0 {
+		fail(nil, "Use either -import-path or -import-url, but not both.")
+	}
 	if !reflection.val && len(protoset) == 0 && len(protoFiles) == 0 {
 		fail(nil, "No protoset files or proto files specified and -use-reflection set to false.")
 	}
@@ -501,7 +506,11 @@ func main() {
 		}
 	} else if len(protoFiles) > 0 {
 		var err error
-		fileSource, err = grpcurl.DescriptorSourceFromProtoFiles(importPaths, protoFiles...)
+		if len(*importUrl) > 0 {
+			fileSource, err = grpcurl.DescriptorSourceFromRemoteProtoFiles(*importUrl, protoFiles...)
+		} else {
+			fileSource, err = grpcurl.DescriptorSourceFromProtoFiles(importPaths, protoFiles...)
+		}
 		if err != nil {
 			fail(err, "Failed to process proto source files.")
 		}
@@ -784,7 +793,7 @@ func prettify(docString string) string {
 		j++
 	}
 
-	return strings.Join(parts[:j], "\n"+indent())
+	return strings.Join(parts[:j], "\n")
 }
 
 func warn(msg string, args ...interface{}) {

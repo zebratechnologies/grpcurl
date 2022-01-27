@@ -6,6 +6,12 @@ import (
 	"fmt"
 	"io"
 	"io/ioutil"
+	"net/http"
+	"net/url"
+	"os"
+	"path"
+	"path/filepath"
+	"strings"
 	"sync"
 
 	"github.com/golang/protobuf/proto" //lint:ignore SA1019 we have to import this because it appears in exported API
@@ -64,6 +70,44 @@ func DescriptorSourceFromProtoFiles(importPaths []string, fileNames ...string) (
 		return nil, err
 	}
 	p := protoparse.Parser{
+		ImportPaths:           importPaths,
+		InferImportPaths:      len(importPaths) == 0,
+		IncludeSourceCodeInfo: true,
+	}
+	fds, err := p.ParseFiles(fileNames...)
+	if err != nil {
+		return nil, fmt.Errorf("could not parse given files: %v", err)
+	}
+	return DescriptorSourceFromFileDescriptors(fds...)
+}
+
+// DescriptorSourceFromRemoteProtoFiles creates a DescriptorSource that is backed by the named files,
+// whose contents are Protocol Buffer source files. The given importUrl is used to locate
+// the protobuf file in the remote.
+func DescriptorSourceFromRemoteProtoFiles(importUrl string, fileNames ...string) (DescriptorSource, error) {
+	importPaths := []string{}
+	fileNames, err := protoparse.ResolveFilenames(nil, fileNames...)
+	if err != nil {
+		return nil, err
+	}
+
+	u, err := url.Parse(importUrl)
+
+	p := protoparse.Parser{
+		Accessor: func(file string) (io.ReadCloser, error) {
+			// The protoparse lib can import standard Google-provided (google/protobuf/*.proto) files out of the box.
+			// For these files we don't need to fetch them in the remote URL
+			if !strings.Contains(file, "google/protobuf") {
+				filename := filepath.Base(file)
+				basePath := u.Path
+				u.Path = path.Join(u.Path, filename)
+				resp, err := http.Get(u.String())
+				u.Path = basePath
+				return resp.Body, err
+			} else {
+				return os.Open(file)
+			}
+		},
 		ImportPaths:           importPaths,
 		InferImportPaths:      len(importPaths) == 0,
 		IncludeSourceCodeInfo: true,
