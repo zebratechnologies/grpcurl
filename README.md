@@ -1,6 +1,6 @@
 # gRPCurl
-[![Build Status](https://circleci.com/gh/fullstorydev/grpcurl/tree/master.svg?style=svg)](https://circleci.com/gh/fullstorydev/grpcurl/tree/master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/fullstorydev/grpcurl)](https://goreportcard.com/report/github.com/fullstorydev/grpcurl)
+[![Build Status](https://circleci.com/gh/zebratechnologies/grpcurl/tree/master.svg?style=svg)](https://circleci.com/gh/zebratechnologies/grpcurl/tree/master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/zebratechnologies/grpcurl)](https://goreportcard.com/report/github.com/zebratechnologies/grpcurl)
 
 `grpcurl` is a command-line tool that lets you interact with gRPC servers. It's
 basically `curl` for gRPC servers.
@@ -22,7 +22,7 @@ is using that very same schema. So, if the server you interact with does not sup
 reflection, you will either need the proto source files that define the service or need
 protoset files that `grpcurl` can use.
 
-This repo also provides a library package, `github.com/fullstorydev/grpcurl`, that has
+This repo also provides a library package, `github.com/zebratechnologies/grpcurl`, that has
 functions for simplifying the construction of other command-line tools that dynamically
 invoke gRPC endpoints. This code is a great example of how to use the various packages of
 the [protoreflect](https://godoc.org/github.com/jhump/protoreflect) library, and shows
@@ -47,7 +47,7 @@ files (containing compiled descriptors, produced by `protoc`) to `grpcurl`.
 
 ### Binaries
 
-Download the binary from the [releases](https://github.com/fullstorydev/grpcurl/releases) page.
+Download the binary from the [releases](https://github.com/zebratechnologies/grpcurl/releases) page.
 
 ### Homebrew (macOS)
 
@@ -83,7 +83,7 @@ https://repology.org/project/grpcurl/information
 If you already have the [Go SDK](https://golang.org/doc/install) installed, you can use the `go`
 tool to install `grpcurl`:
 ```shell
-go install github.com/fullstorydev/grpcurl/cmd/grpcurl@latest
+go install github.com/zebratechnologies/grpcurl/cmd/grpcurl@latest
 ```
 
 This installs the command into the `bin` sub-folder of wherever your `$GOPATH`
