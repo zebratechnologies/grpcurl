@@ -1,6 +1,6 @@
 # gRPCurl
-[![Build Status](https://circleci.com/gh/zebratechnologies/grpcurl/tree/master.svg?style=svg)](https://circleci.com/gh/zebratechnologies/grpcurl/tree/master)
-[![Go Report Card](https://goreportcard.com/badge/github.com/zebratechnologies/grpcurl)](https://goreportcard.com/report/github.com/zebratechnologies/grpcurl)
+[![Build Status](https://circleci.com/gh/fullstorydev/grpcurl/tree/master.svg?style=svg)](https://circleci.com/gh/fullstorydev/grpcurl/tree/master)
+[![Go Report Card](https://goreportcard.com/badge/github.com/fullstorydev/grpcurl)](https://goreportcard.com/report/github.com/fullstorydev/grpcurl)
 
 `grpcurl` is a command-line tool that lets you interact with gRPC servers. It's
 basically `curl` for gRPC servers.
